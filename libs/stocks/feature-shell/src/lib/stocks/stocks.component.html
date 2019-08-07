@@ -7,13 +7,13 @@
       value=""
     />
     <mat-error
-      ><span
-        *ngIf="
+    ><span
+      *ngIf="
           !stockPickerForm.get('symbol').valid &&
           stockPickerForm.get('symbol').touched
         "
-        >Please enter a symbol</span
-      >
+    >Please enter a symbol</span
+    >
     </mat-error>
   </mat-form-field>
 
@@ -32,4 +32,4 @@
   <button (click)="fetchQuote()" mat-raised-button>Go</button>
 </form>
 
-<coding-challenge-chart [data$]="quotes$"></coding-challenge-chart>
+<coding-challenge-chart [data]="quotes$ | async"></coding-challenge-chart>
