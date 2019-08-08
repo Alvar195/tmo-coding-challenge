@@ -59,10 +59,40 @@ describe('StocksComponent', () => {
 
     component.stockPickerForm.setValue({
       symbol: 'AAPL',
-      period: TIME_PERIODS[1].value // 'max'
+      period: TIME_PERIODS[0].value // 'max'
     });
     tick(1000);
 
-    expect(spy).toHaveBeenCalledWith('AAPL', TIME_PERIODS[1].value);
+    expect(spy).toHaveBeenCalledWith('AAPL', TIME_PERIODS[0].value);
   }));
+
+  it('test subscription', fakeAsync(() => {
+    const spy = spyOn(facade, 'fetchQuote');
+
+    component.stockPickerForm.setValue({
+      symbol: 'AAPL',
+      period: TIME_PERIODS[0].value
+    });
+    tick(1000);
+
+    expect(spy).toHaveBeenCalledWith('AAPL', TIME_PERIODS[0].value);
+  }));
+
+  it('test form default validity', () => {
+    expect(component.stockPickerForm.valid).toBeFalsy();
+  });
+
+  it('test form default values', () => {
+    expect(component.stockPickerForm.get('symbol').value).toBeNull();
+    expect(component.stockPickerForm.get('period').value).toBeNull();
+  });
+
+  it('test form valid', () => {
+    component.stockPickerForm.setValue({
+      symbol: 'AAPL',
+      period: TIME_PERIODS[0].value
+    });
+
+    expect(component.stockPickerForm.valid).toBeTruthy();
+  });
 });

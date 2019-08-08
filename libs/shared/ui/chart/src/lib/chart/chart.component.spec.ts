@@ -3,6 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ChartComponent } from './chart.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { GoogleChartsModule } from 'angular-google-charts';
+import { By } from '@angular/platform-browser';
 
 describe('ChartComponent', () => {
   let component: ChartComponent;
@@ -23,5 +24,11 @@ describe('ChartComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('no chart by default', () => {
+    const debugElement = fixture.debugElement.query(By.css('google-chart'));
+
+    expect(debugElement).toBeNull();
   });
 });
