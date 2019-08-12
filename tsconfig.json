@@ -26,6 +26,9 @@
       ],
       "@coding-challenge/stocks/data-access-app-config": [
         "libs/stocks/data-access-app-config/src/index.ts"
+      ],
+      "@coding-challenge/shared/util/test": [
+        "libs/shared/util/test/src/index.ts"
       ]
     }
   },

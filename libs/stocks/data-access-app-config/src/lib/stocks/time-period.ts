@@ -7,6 +7,7 @@ export enum TimePeriodDisplay {
   SIX_MONTHS = 'Six months',
   THREE_MONTHS = 'Three months',
   ONE_MONTH = 'One month',
+  CUSTOM = 'Custom date range'
 }
 
 export enum TimePeriodValue {
@@ -18,10 +19,12 @@ export enum TimePeriodValue {
   SIX_MONTHS = '6m',
   THREE_MONTHS = '3m',
   ONE_MONTH = '1m',
+  CUSTOM = 'custom'
 }
 
 
 export const TIME_PERIODS = [
+  { viewValue: TimePeriodDisplay.CUSTOM, value: TimePeriodValue.CUSTOM },
   { viewValue: TimePeriodDisplay.ALL, value: TimePeriodValue.ALL },
   { viewValue: TimePeriodDisplay.FIVE_YEARS, value: TimePeriodValue.FIVE_YEARS },
   { viewValue: TimePeriodDisplay.TWO_YEARS, value: TimePeriodValue.TWO_YEARS },

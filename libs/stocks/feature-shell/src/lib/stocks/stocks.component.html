@@ -28,6 +28,26 @@
       </mat-option>
     </mat-select>
   </mat-form-field>
+
+  <div *ngIf="stockPickerForm.value.period === 'custom'">
+    <mat-form-field class="date-picker">
+      <label>
+        <input matInput [matDatepicker]="fromDate" [matDatepickerFilter]="fromDateFilter"
+               formControlName="fromDate" placeholder="From">
+      </label>
+      <mat-datepicker-toggle matSuffix [for]="fromDate"></mat-datepicker-toggle>
+      <mat-datepicker #fromDate></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field class="date-picker">
+      <label>
+        <input matInput [max]="today" [matDatepicker]="toDate" [matDatepickerFilter]="toDateFilter"
+               formControlName="toDate" placeholder="To">
+      </label>
+      <mat-datepicker-toggle matSuffix [for]="toDate"></mat-datepicker-toggle>
+      <mat-datepicker #toDate></mat-datepicker>
+    </mat-form-field>
+  </div>
 </form>
 
 <coding-challenge-chart [data]="quotes$ | async"></coding-challenge-chart>

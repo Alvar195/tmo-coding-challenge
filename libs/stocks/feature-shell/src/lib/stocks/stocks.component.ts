@@ -1,10 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PriceQueryFacade } from '@coding-challenge/stocks/data-access-price-query';
-import { TIME_PERIODS } from './time-period';
-import { TimePeriod } from './time-period.interface';
 import { Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
+import { TIME_PERIODS, TimePeriod } from '@coding-challenge/stocks/data-access-app-config';
 
 @Component({
   selector: 'coding-challenge-stocks',
@@ -12,16 +11,19 @@ import { debounceTime } from 'rxjs/operators';
   styleUrls: ['./stocks.component.css']
 })
 export class StocksComponent implements OnInit, OnDestroy {
+  private subscription$: Subscription;
+  private today: Date = new Date();
   stockPickerForm: FormGroup;
   quotes$ = this.priceQuery.priceQueries$;
   timePeriods: TimePeriod[] = TIME_PERIODS;
-  private subscription$: Subscription;
 
 
   constructor(private fb: FormBuilder, private priceQuery: PriceQueryFacade) {
     this.stockPickerForm = fb.group({
       symbol: [null, Validators.required],
-      period: [null, Validators.required]
+      period: [TIME_PERIODS[0].value, Validators.required],
+      fromDate: [this.today, Validators.required],
+      toDate: [this.today, Validators.required]
     });
   }
 
@@ -37,8 +39,20 @@ export class StocksComponent implements OnInit, OnDestroy {
 
   fetchQuote(): void {
     if (this.stockPickerForm.valid) {
-      const { symbol, period } = this.stockPickerForm.value;
-      this.priceQuery.fetchQuote(symbol, period);
+      const { symbol, period, fromDate, toDate } = this.stockPickerForm.value;
+      this.priceQuery.fetchQuote(symbol, period, fromDate, toDate);
     }
   }
+
+  fromDateFilter = (date: Date): boolean => {
+    const { toDate } = this.stockPickerForm.value;
+    if (!toDate) return true;
+    return toDate.getTime() >= date.getTime();
+  };
+
+  toDateFilter = (date: Date): boolean => {
+    const { fromDate } = this.stockPickerForm.value;
+    if (!fromDate) return true;
+    return fromDate.getTime() <= date.getTime();
+  };
 }

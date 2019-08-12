@@ -31,4 +31,29 @@ describe('ChartComponent', () => {
 
     expect(debugElement).toBeNull();
   });
+
+  it('test chart default data', () => {
+    expect(component.chart.title).toEqual('');
+    expect(component.chart.type).toEqual('LineChart');
+    expect(component.chart.data).toEqual([]);
+    expect(component.chart.columnNames).toEqual(['period', 'close']);
+    expect(component.chart.options).toEqual({ title: `Stock price`, width: '600', height: '400' });
+  });
+
+  it('render chart with data', () => {
+    component.data = [[["2019-07-05", 204.26]]];
+    fixture.detectChanges();
+
+    const debugElement = fixture.debugElement.query(By.css('google-chart'));
+
+    expect(debugElement).toBeDefined();
+  });
+
+  it('show helper text when no data', () => {
+    const compiled = fixture.debugElement.nativeElement;
+
+    expect(compiled.querySelector('div').textContent).toContain(
+      'Please select a valid time period'
+    );
+  });
 });
