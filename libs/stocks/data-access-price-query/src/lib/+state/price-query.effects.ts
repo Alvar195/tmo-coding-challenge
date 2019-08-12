@@ -17,7 +17,7 @@ export class PriceQueryEffects {
         const isCustom = (action.period === 'custom');
         const period = (isCustom) ? 'max' : action.period;
         return this.httpClient
-          .get<PriceQueryResponse[]>(`${this.env.apiURL}/beta/stock/${action.symbol}/chart/${period}?token=${this.env.apiKey}`)
+          .get<PriceQueryResponse[]>(`${this.env.apiURL}/beta/stock/${action.symbol}/chart/${period}`)
           .pipe(
             map(response =>
               new PriceQueryFetched(isCustom ? this.filterQuotes(action, response) : response)

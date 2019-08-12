@@ -57,6 +57,8 @@
     "jasmine-marbles": "^0.6.0",
     "lodash": "^4.17.15",
     "lodash-es": "^4.17.11",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.4",
     "rxjs": "6.3.3",
     "zone.js": "^0.8.26"
   },
