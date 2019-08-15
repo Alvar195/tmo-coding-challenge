@@ -1,9 +1,12 @@
 <google-chart
-  *ngIf="data"
+  *ngIf="data && data.length > 0"
   [title]="chart.title"
   [type]="chart.type"
-  [data]="chartData"
+  [data]="data"
   [columnNames]="chart.columnNames"
   [options]="chart.options"
 >
 </google-chart>
+
+<div *ngIf="!data">Please select a valid time period</div>
+<div *ngIf="data && data.length === 0">No data for this time period</div>

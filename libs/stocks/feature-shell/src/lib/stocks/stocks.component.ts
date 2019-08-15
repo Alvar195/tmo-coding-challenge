@@ -1,43 +1,58 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PriceQueryFacade } from '@coding-challenge/stocks/data-access-price-query';
+import { Subscription } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
+import { TIME_PERIODS, TimePeriod } from '@coding-challenge/stocks/data-access-app-config';
 
 @Component({
   selector: 'coding-challenge-stocks',
   templateUrl: './stocks.component.html',
   styleUrls: ['./stocks.component.css']
 })
-export class StocksComponent implements OnInit {
+export class StocksComponent implements OnInit, OnDestroy {
+  private subscription$: Subscription;
+  private today: Date = new Date();
   stockPickerForm: FormGroup;
-  symbol: string;
-  period: string;
-
   quotes$ = this.priceQuery.priceQueries$;
+  timePeriods: TimePeriod[] = TIME_PERIODS;
 
-  timePeriods = [
-    { viewValue: 'All available data', value: 'max' },
-    { viewValue: 'Five years', value: '5y' },
-    { viewValue: 'Two years', value: '2y' },
-    { viewValue: 'One year', value: '1y' },
-    { viewValue: 'Year-to-date', value: 'ytd' },
-    { viewValue: 'Six months', value: '6m' },
-    { viewValue: 'Three months', value: '3m' },
-    { viewValue: 'One month', value: '1m' }
-  ];
 
   constructor(private fb: FormBuilder, private priceQuery: PriceQueryFacade) {
     this.stockPickerForm = fb.group({
       symbol: [null, Validators.required],
-      period: [null, Validators.required]
+      period: [TIME_PERIODS[0].value, Validators.required],
+      fromDate: [this.today, Validators.required],
+      toDate: [this.today, Validators.required]
     });
   }
 
-  ngOnInit() {}
+  ngOnInit(): void {
+    this.subscription$ = this.stockPickerForm.valueChanges
+      .pipe(debounceTime(1000))
+      .subscribe(() => this.fetchQuote());
+  }
 
-  fetchQuote() {
+  ngOnDestroy(): void {
+    this.subscription$.unsubscribe();
+  }
+
+  fetchQuote(): void {
     if (this.stockPickerForm.valid) {
-      const { symbol, period } = this.stockPickerForm.value;
-      this.priceQuery.fetchQuote(symbol, period);
+      const { symbol, period, fromDate, toDate } = this.stockPickerForm.value;
+      this.priceQuery.fetchQuote(symbol, period, fromDate, toDate);
     }
   }
+
+  fromDateFilter = (date: Date): boolean => {
+    const { toDate } = this.stockPickerForm.value;
+    if (!toDate) return true;
+    return toDate.getTime() >= date.getTime();
+  };
+
+  toDateFilter = (date: Date): boolean => {
+    const { fromDate } = this.stockPickerForm.value;
+    if (!fromDate) return true;
+    return fromDate.getTime() <= date.getTime();
+  };
 }
