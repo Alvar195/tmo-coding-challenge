@@ -3,5 +3,7 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  apiKey: 'Tpk_6b893c3b7db344b78019dfcfa7c6ba41',
+  apiURL: 'https://sandbox.iexapis.com'
 };

@@ -7,13 +7,13 @@
       value=""
     />
     <mat-error
-      ><span
-        *ngIf="
+    ><span
+      *ngIf="
           !stockPickerForm.get('symbol').valid &&
           stockPickerForm.get('symbol').touched
         "
-        >Please enter a symbol</span
-      >
+    >Please enter a symbol</span
+    >
     </mat-error>
   </mat-form-field>
 
@@ -29,7 +29,25 @@
     </mat-select>
   </mat-form-field>
 
-  <button (click)="fetchQuote()" mat-raised-button>Go</button>
+  <div *ngIf="stockPickerForm.value.period === 'custom'">
+    <mat-form-field class="date-picker">
+      <label>
+        <input matInput [matDatepicker]="fromDate" [matDatepickerFilter]="fromDateFilter"
+               formControlName="fromDate" placeholder="From">
+      </label>
+      <mat-datepicker-toggle matSuffix [for]="fromDate"></mat-datepicker-toggle>
+      <mat-datepicker #fromDate></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field class="date-picker">
+      <label>
+        <input matInput [max]="today" [matDatepicker]="toDate" [matDatepickerFilter]="toDateFilter"
+               formControlName="toDate" placeholder="To">
+      </label>
+      <mat-datepicker-toggle matSuffix [for]="toDate"></mat-datepicker-toggle>
+      <mat-datepicker #toDate></mat-datepicker>
+    </mat-form-field>
+  </div>
 </form>
 
-<coding-challenge-chart [data$]="quotes$"></coding-challenge-chart>
+<coding-challenge-chart [data]="quotes$ | async"></coding-challenge-chart>
